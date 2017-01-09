@@ -1,0 +1,51 @@
+{
+  "name": "workers-factory",
+  "version": "1.0.0",
+  "description": "A set of different workers for building frontend applications",
+  "main": "index.js",
+  "scripts": {
+    "test": "istanbul cover _mocha -- test/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/warehouseai/workers-factory.git"
+  },
+  "keywords": [
+    "workers",
+    "carpenterd",
+    "webpack",
+    "browserify",
+    "babel"
+  ],
+  "author": "GoDaddy Engineers",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/warehouseai/workers-factory/issues"
+  },
+  "homepage": "https://github.com/warehouseai/workers-factory#readme",
+  "dependencies": {
+    "async": "~2.1.4",
+    "babel-core": "~6.21.0",
+    "bl": "~1.2.0",
+    "browserify": "~13.3.0",
+    "clean-css": "~3.4.23",
+    "errs": "~0.3.2",
+    "fingerprinting": "~1.0.1",
+    "json-try-parse": "~1.0.0",
+    "minimize": "~2.0.0",
+    "mkdirp": "~0.5.1",
+    "one-time": "0.0.4",
+    "safe-regex": "~1.1.0",
+    "tar-fs": "~1.15.0",
+    "toml": "~2.3.1",
+    "uglify-js": "~2.7.5",
+    "walk": "~2.3.9",
+    "webpack": "~1.14.0"
+  },
+  "devDependencies": {
+    "assume": "~1.4.1",
+    "istanbul": "~0.4.5",
+    "mocha": "~3.2.0",
+    "npm": "~3.10.10"
+  }
+}
