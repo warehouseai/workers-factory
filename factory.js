@@ -42,7 +42,6 @@ util.inherits(Factory, EE);
  * @api public
  */
 function Factory(data, run) {
-  console.dir(arguments);
   if (typeof data !== 'object' || typeof run !== 'function' || !data.name) {
     throw new Error('Factory received invalid options');
   }
