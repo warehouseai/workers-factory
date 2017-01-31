@@ -108,7 +108,7 @@ describe('Factory', function () {
     it('defaults to the `main` property of the package.json as entry file', function (done) {
       factory.init(function () {
         assume(factory.entry).to.be.a('string');
-        assume(factory.entry).to.include('test/fixtures/es6/index.jsx');
+        assume(factory.entry).to.include('test/fixtures/es6/index.js');
 
         done();
       });
@@ -185,8 +185,8 @@ describe('Factory', function () {
       run(factory, function (error, factory) {
         if (error) return done(error);
 
-        const output = factory.output['index.jsx'].toString('utf-8');
-        const compressed = factory.compressed['index.jsx'];
+        const output = factory.output['index.js'].toString('utf-8');
+        const compressed = factory.compressed['index.js'];
 
         assume(factory.base).to.include('es6');
         assume(output).to.include('Build an ES6 React component');
@@ -210,8 +210,8 @@ describe('Factory', function () {
       run(new Factory(config('browserify'), browserifyworker.run), function (error, factory) {
         if (error) return done(error);
 
-        const output = factory.output['index.jsx'].toString('utf-8');
-        const compressed = factory.compressed['index.jsx'];
+        const output = factory.output['index.js'].toString('utf-8');
+        const compressed = factory.compressed['index.js'];
 
         assume(factory.base).to.include('browserify');
         assume(output).to.include('Browserify an ES6 React component');

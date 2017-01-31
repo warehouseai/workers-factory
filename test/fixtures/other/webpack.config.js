@@ -5,9 +5,9 @@ var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 module.exports = {
   context: __dirname,
   entry: {
-    preview: './preview.jsx',
-    editor: './editor.jsx',
-    publish: './publish.jsx'
+    preview: './preview.js',
+    editor: './editor.js',
+    publish: './publish.js'
   },
   externals: {
     'react': 'React'
