@@ -2,7 +2,7 @@
   "name": "test",
   "version": "0.0.0",
   "description": "ES6 React Test module",
-  "main": "./index.jsx",
+  "main": "./index.js",
   "dependencies": {
     "react": "~0.13.3"
   },

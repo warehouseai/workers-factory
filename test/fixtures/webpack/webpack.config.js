@@ -1,6 +1,6 @@
 module.exports = {
   context: __dirname,
-  entry: './index.jsx',
+  entry: './index.js',
   externals: {
     'react': 'React'
   },
