@@ -192,7 +192,8 @@ Factory.prototype.minify = function minify(next) {
   //
   // Build not targetted at production or minify was explicitly denied.
   //
-  if (factory.data.env !== 'prod' || factory.data.minify === false) {
+  if (['prod', 'test'].indexOf(factory.data.env) === -1
+      || factory.data.minify === false) {
     debug(`Skip minify, env: ${ factory.data.env } and minify flag: ${ factory.data.minify }`);
     return void next();
   }
@@ -219,7 +220,7 @@ Factory.prototype.minify = function minify(next) {
     function minified(error, content, supplementary) {
       if (error) return void cb(error);
 
-      factory.stock(file, content);
+      factory.stock(content.filename || file, content);
 
       //
       // Add additional generated files to the factory output.
