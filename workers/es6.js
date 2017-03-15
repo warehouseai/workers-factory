@@ -34,7 +34,9 @@ module.exports = function bab(data, callback) {
  * @param {Function} next Completion callback
  * @api public
  */
-module.exports.run = function run(next) {
+module.exports.run = run;
+
+function run(next) {
   const output = {};
 
   output[path.basename(this.entry)] = babel.transform(this.source, {

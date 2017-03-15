@@ -33,7 +33,9 @@ module.exports = function brow(data, callback) {
  * @param {Function} next Completion callback
  * @api public
  */
-module.exports.run = function run(next) {
+module.exports.run = run;
+
+function run(next) {
   const config = this.pkg.browserify || {};
   const entry = this.entry;
   const output = {};

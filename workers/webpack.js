@@ -37,7 +37,9 @@ module.exports = function web(data, callback) {
  * @returns {void}
  * @api public
  */
-module.exports.run = function run(next) {
+module.exports.run = run;
+
+function run(next) {
   const dist = path.join(this.base, 'dist');
   const files = {};
   let called = false;
