@@ -1,6 +1,6 @@
 {
   "name": "workers-factory",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A set of different workers for building frontend applications",
   "main": "index.js",
   "scripts": {
