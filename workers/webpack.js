@@ -78,7 +78,11 @@ module.exports.run = function run(next) {
 
   }
 
-  webpack(this.base, this.entry, function webpacked(error) {
+  webpack({
+    base: this.base,
+    entry: this.entry,
+    env: this.data.processEnv
+  }, function webpacked(error) {
     if (error) {
       return void done(error);
     }
@@ -104,11 +108,12 @@ module.exports.run = function run(next) {
  * @param {String} config Path to the webpack config file
  * @param {Function} callback Continuation callback
  */
-function webpack(base, config, callback) {
+function webpack(opts, callback) {
+  const config = opts.entry;
   const webpackPath = path.join(require.resolve('webpack'), '..', '..', 'bin', 'webpack.js');
   execFile(process.execPath, [webpackPath, `--config ${config}`, '--bail'], {
-    cwd: base,
-    env: process.env // eslint-disable-line
+    cwd: opts.base,
+    env: opts.processEnv || process.env // eslint-disable-line
   }, function (err, stdout, stderr) {
     if (err) {
       err.output = stdout + stderr;
