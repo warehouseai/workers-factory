@@ -5,6 +5,7 @@ const walk = require('walk').walk;
 const path = require('path');
 const fs = require('fs');
 const execFile = require('child_process').execFile;
+
 /**
  * Setup factory line.
  *
@@ -83,7 +84,8 @@ function run(next) {
   webpack({
     base: this.base,
     entry: this.entry,
-    env: this.data.processEnv
+    env: this.data.env,
+    processEnv: this.data.processEnv
   }, function webpacked(error) {
     if (error) {
       return void done(error);
@@ -119,10 +121,37 @@ function webpack(opts, callback) {
   }, function (err, stdout, stderr) {
     if (err) {
       err.output = stdout + stderr;
+      console.log(err.message);
+      //
+      // Rebuild and rerun if the error is special
+      //
+      if (err.message.includes('npm rebuild')) {
+        return rebuild(opts, (err) => {
+          console.log(err); console.log('rebuilt?');
+          if (err) return callback(err);
+          webpack(opts, callback);
+        });
+      }
       return callback(err);
     }
     // TODO: What should we check in the output to determine error? Does
     // webpack output to stderr properly?
     return callback();
+  });
+}
+
+//
+// The most common case is node-sass, in the future we can try and be smart and
+// decipher it from the output but until then this will be hardcoded. This
+// makes it faster
+//
+function rebuild(opts, callback) {
+  const npmPath = path.join(require.resolve('npm'), '..', '..', 'bin', 'npm-cli.js');
+  execFile(process.execPath, [npmPath, 'rebuild', 'node-sass'], {
+    cwd: opts.base,
+    env: opts.processEnv || process.env
+  }, (err, stdout, stderr) => {
+    if (err) return callback(err);
+    callback();
   });
 }
