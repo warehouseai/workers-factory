@@ -121,13 +121,11 @@ function webpack(opts, callback) {
   }, function (err, stdout, stderr) {
     if (err) {
       err.output = stdout + stderr;
-      console.log(err.message);
       //
       // Rebuild and rerun if the error is special
       //
       if (err.message.includes('npm rebuild')) {
         return rebuild(opts, (err) => {
-          console.log(err); console.log('rebuilt?');
           if (err) return callback(err);
           webpack(opts, callback);
         });
