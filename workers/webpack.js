@@ -148,8 +148,5 @@ function rebuild(opts, callback) {
   execFile(process.execPath, [npmPath, 'rebuild', 'node-sass'], {
     cwd: opts.base,
     env: opts.processEnv || process.env
-  }, (err, stdout, stderr) => {
-    if (err) return callback(err);
-    callback();
-  });
+  }, callback);
 }
