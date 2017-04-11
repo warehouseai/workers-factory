@@ -42,6 +42,7 @@ module.exports.run = run;
 
 function run(next) {
   const dist = path.join(this.base, 'dist');
+  const factory = this;
   const files = {};
   let called = false;
 
@@ -96,6 +97,10 @@ function run(next) {
       .once('directoryError', errorHandler)
       .once('end', () => done(null, files))
       .on('file', function found(root, file, cb) {
+        //
+        // Run the filter function and if it returns false, dont use that file
+        //
+        if (!factory.filter(file)) return void cb();
         //
         // Ignore minified files that were found in the directory
         //

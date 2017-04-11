@@ -60,6 +60,9 @@ function Factory(data, run) {
   this.output = {};
   this.data = data;
   this.run = run;
+  this.filter = typeof data.filter === 'function'
+    ? data.filter
+    : () => true
 
   debug(`Factory process initiated for ${ data.name } mounted on ${ this.dest }`);
 }
