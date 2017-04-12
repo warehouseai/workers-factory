@@ -54,15 +54,18 @@ function Factory(data, run) {
   this.dest = data.destDir || path.join(os.tmpdir(), `${data.id}-publish`);
 
   //
+  // Setup any optional filters with our default filter set to run first
+  //
+  this.filters = (data.filters || [data.filter]).concat([
+    (file) => file.name.indexOf('.min.') === -1
+  ]).filter(Boolean).reverse();
+  //
   // Default the config to empty
   //
   this.config = { files: {} };
   this.output = {};
   this.data = data;
   this.run = run;
-  this.filter = typeof data.filter === 'function'
-    ? data.filter
-    : () => true
 
   debug(`Factory process initiated for ${ data.name } mounted on ${ this.dest }`);
 }
@@ -325,6 +328,19 @@ Factory.prototype.clean = function clean(next) {
   debug(`Clean build content of ${ id }`);
 
   return rmrf(id, next);
+};
+
+/**
+ * Run the filter functions for what files get read
+ *
+ * @param {String} file that will be assessed by filtering functions
+ * @returns {Boolean} Whether this file gets filtered out or not
+ * @api public
+ */
+Factory.prototype.filter = function filt(file) {
+  return this.filters.every(fn => {
+    return fn(file);
+  });
 };
 
 /**

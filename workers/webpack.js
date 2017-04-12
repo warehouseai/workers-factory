@@ -101,10 +101,6 @@ function run(next) {
         // Run the filter function and if it returns false, dont use that file
         //
         if (!factory.filter(file)) return void cb();
-        //
-        // Ignore minified files that were found in the directory
-        //
-        if (file.name.indexOf('.min.') !== -1) return void cb();
         return read(path.join(root, file.name), file.name, cb);
       });
   });
