@@ -18,6 +18,9 @@ describe('Factory', function () {
   const zlib = require('zlib');
   const toml = require('toml');
   const fs = require('fs');
+
+  const assign = Object.assign;
+
   let factory;
 
   //
@@ -147,6 +150,25 @@ describe('Factory', function () {
           done();
         });
       });
+    });
+  });
+
+  describe('#filter', function () {
+    it('is a function', function () {
+      assume(factory.filter).is.a('function');
+      assume(factory.filter).to.have.length(1);
+    });
+
+    it('runs the default filter for .min files and returns false when it exists', function () {
+      assume(factory.filter('something.min.js')).equals(false);
+    });
+
+    it('runs other filter functions that are configured with the instance', function () {
+      const fact = new Factory(assign({},
+        config('es6'), { filter: (file) => path.extname(file) === '.css' }), es6worker.run);
+
+      assume(fact.filter('something.js')).equals(false);
+      assume(fact.filter('something.css')).equals(true);
     });
   });
 

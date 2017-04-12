@@ -57,7 +57,7 @@ function Factory(data, run) {
   // Setup any optional filters with our default filter set to run first
   //
   this.filters = (data.filters || [data.filter]).concat([
-    (file) => file.name.indexOf('.min.') === -1
+    (file) => file.indexOf('.min.') === -1
   ]).filter(Boolean).reverse();
   //
   // Default the config to empty

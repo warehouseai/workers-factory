@@ -97,11 +97,12 @@ function run(next) {
       .once('directoryError', errorHandler)
       .once('end', () => done(null, files))
       .on('file', function found(root, file, cb) {
+        const filepath = path.join(root, file.name);
         //
         // Run the filter function and if it returns false, dont use that file
         //
-        if (!factory.filter(file)) return void cb();
-        return read(path.join(root, file.name), file.name, cb);
+        if (!factory.filter(filepath)) return void cb();
+        return read(filepath, file.name, cb);
       });
   });
 };
