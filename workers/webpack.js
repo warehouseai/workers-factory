@@ -42,6 +42,7 @@ module.exports.run = run;
 
 function run(next) {
   const dist = path.join(this.base, 'dist');
+  const factory = this;
   const files = {};
   let called = false;
 
@@ -96,11 +97,12 @@ function run(next) {
       .once('directoryError', errorHandler)
       .once('end', () => done(null, files))
       .on('file', function found(root, file, cb) {
+        const filepath = path.join(root, file.name);
         //
-        // Ignore minified files that were found in the directory
+        // Run the filter function and if it returns false, dont use that file
         //
-        if (file.name.indexOf('.min.') !== -1) return void cb();
-        return read(path.join(root, file.name), file.name, cb);
+        if (!factory.filter(filepath)) return void cb();
+        return read(filepath, file.name, cb);
       });
   });
 };
