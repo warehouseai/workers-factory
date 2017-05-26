@@ -3,6 +3,7 @@
 const Factory = require('../factory');
 const walk = require('walk').walk;
 const path = require('path');
+const resolve = require('resolve');
 const fs = require('fs');
 const execFile = require('child_process').execFile;
 
@@ -116,27 +117,30 @@ function run(next) {
  */
 function webpack(opts, callback) {
   const config = opts.entry;
-  const webpackPath = path.join(require.resolve('webpack'), '..', '..', 'bin', 'webpack.js');
-  execFile(process.execPath, [webpackPath, `--config ${config}`, '--bail'], {
-    cwd: opts.base,
-    env: opts.processEnv || process.env // eslint-disable-line
-  }, function (err, stdout, stderr) {
-    if (err) {
-      err.output = stdout + stderr;
-      //
-      // Rebuild and rerun if the error is special
-      //
-      if (err.message.includes('npm rebuild')) {
-        return rebuild(opts, (err) => {
-          if (err) return callback(err);
-          webpack(opts, callback);
-        });
+  return resolve('webpack', { basedir: opts.base }, (err, res) => {
+    const root = res || require.resolve('webpack');
+    const webpackPath = path.join(root, '..', '..', 'bin', 'webpack.js');
+    execFile(process.execPath, [webpackPath, `--config ${config}`, '--bail'], {
+      cwd: opts.base,
+      env: opts.processEnv || process.env // eslint-disable-line
+    }, function (err, stdout, stderr) {
+      if (err) {
+        err.output = stdout + stderr;
+        //
+        // Rebuild and rerun if the error is special
+        //
+        if (err.message.includes('npm rebuild')) {
+          return rebuild(opts, (err) => {
+            if (err) return callback(err);
+            webpack(opts, callback);
+          });
+        }
+        return callback(err);
       }
-      return callback(err);
-    }
-    // TODO: What should we check in the output to determine error? Does
-    // webpack output to stderr properly?
-    return callback();
+      // TODO: What should we check in the output to determine error? Does
+      // webpack output to stderr properly?
+      return callback();
+    });
   });
 }
 
