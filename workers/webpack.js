@@ -120,7 +120,7 @@ function webpack(opts, callback) {
   return resolve('webpack', { basedir: opts.base }, (err, res) => {
     const root = res || require.resolve('webpack');
     const webpackPath = path.join(root, '..', '..', 'bin', 'webpack.js');
-    execFile(process.execPath, [webpackPath, `--config ${config}`, '--bail'], {
+    execFile(process.execPath, [webpackPath, '--config', config, '--bail'], {
       cwd: opts.base,
       env: opts.processEnv || process.env // eslint-disable-line
     }, function (err, stdout, stderr) {
