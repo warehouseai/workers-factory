@@ -403,8 +403,8 @@ Factory.prototype.files = function files(fn) {
       async.parallel([
         fs.writeFile.bind(fs, fullPath, src.content || src),
         !isSourceMap && fs.writeFile.bind(fs, fullPath + '.gz', factory.compressed[file])
-      ].filter(Boolean), (err) => {
-        if (err) return fn(err);
+      ].filter(Boolean), (error) => {
+        if (error) return fn(error);
 
         return next(null, {
           content: fullPath,
@@ -414,8 +414,8 @@ Factory.prototype.files = function files(fn) {
           extension: extensions[extension] || extension
         });
       });
-    }, (err, files) => {
-      if (err) return fn(err);
+    }, (error, files) => {
+      if (error) return fn(error);
       return fn(null, {
         config: factory.config,
         files
