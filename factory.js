@@ -87,7 +87,7 @@ Factory.prototype.unpack = function unpack(next) {
   debug(`Unpack ${ this.data.name } to ${ outputPath }`);
   fs.createReadStream(this.data.content)
     .once('error', next)
-    .pipe(zlib.Unzip())
+    .pipe(zlib.Unzip()) // eslint-disable-line new-cap
     .once('error', next)
     .pipe(tar.extract(outputPath))
     .once('error', next)
@@ -347,7 +347,8 @@ Factory.prototype.filter = function filt(file) {
  * Run the assembly line with scope series and expose results to the main thread.
  *
  * @param {Array} stack Factory functions to run in order.
- * @api public
+ * @param {Function} done Callback function to execute
+ * @public
  */
 Factory.prototype.line = function line(stack, done) {
   const factory = this;
