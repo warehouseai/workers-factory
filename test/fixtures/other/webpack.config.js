@@ -10,7 +10,7 @@ module.exports = {
     publish: './publish.js'
   },
   externals: {
-    'react': 'React'
+    react: 'React'
   },
   module: {
     loaders: [{

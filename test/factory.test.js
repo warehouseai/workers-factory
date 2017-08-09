@@ -2,7 +2,7 @@
 /* eslint no-invalid-this: 0 */
 /* eslint no-sync: 0 */
 /* eslint consistent-return: 0 */
-'use strict';
+
 
 describe('Factory', function () {
   this.timeout(5E4);
@@ -60,9 +60,9 @@ describe('Factory', function () {
         path.join(base, 'node_modules', '.bin', 'npm'),
         'install .'
       ].join(' '), next), function (error) {
-        if (error) return done(error);
-        done();
-      }
+      if (error) return done(error);
+      done();
+    }
     );
   });
 
@@ -220,7 +220,7 @@ describe('Factory', function () {
         assume(compressed[1]).to.equal(139);
         assume(compressed[2]).to.equal(8);
 
-        assume(zlib.gunzipSync(compressed).toString('utf-8')).to.equal(output)
+        assume(zlib.gunzipSync(compressed).toString('utf-8')).to.equal(output);
 
         done();
       });
@@ -274,7 +274,7 @@ describe('Factory', function () {
         assume(compressed[1]).to.equal(139);
         assume(compressed[2]).to.equal(8);
 
-        assume(zlib.gunzipSync(compressed).toString('utf-8')).to.equal(output)
+        assume(zlib.gunzipSync(compressed).toString('utf-8')).to.equal(output);
 
         done();
       });
@@ -491,7 +491,7 @@ describe('Factory', function () {
         assume(error.message).to.equal('test');
 
         done();
-      };
+      }
 
       factory.scrap(new Error('test'), next);
     });

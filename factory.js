@@ -1,4 +1,4 @@
-'use strict';
+
 
 const EE = require('events').EventEmitter;
 const debug = require('diagnostics')('carpenterd:factory');
@@ -62,7 +62,7 @@ function Factory(data, run) {
   //
   // Default the config to empty
   //
-  this.config = { files: {} };
+  this.config = { files: {}};
   this.output = {};
   this.data = data;
   this.run = run;
@@ -235,7 +235,7 @@ Factory.prototype.minify = function minify(next) {
         debug('Store supplementary minified files', supplementary);
 
         Object.keys(supplementary).forEach(key => {
-          factory.stock(key, supplementary[key])
+          factory.stock(key, supplementary[key]);
         });
       }
 
@@ -443,7 +443,7 @@ Factory.prototype.stock = function stock(filename, src, encoding) {
    * @api private
    */
   function buffer(content) {
-    return !Buffer.isBuffer(content) ? new Buffer(content, encoding) : content
+    return !Buffer.isBuffer(content) ? new Buffer(content, encoding) : content;
   }
 
   if (Object.hasOwnProperty.call(src, 'content')) src.content = buffer(src.content);
@@ -469,7 +469,7 @@ Factory.prototype.scrap = function scrap(error, done) {
       });
     }
 
-    done(error)
+    done(error);
   });
 };
 

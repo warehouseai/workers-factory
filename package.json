@@ -4,6 +4,7 @@
   "description": "A set of different workers for building frontend applications",
   "main": "index.js",
   "scripts": {
+    "eslint": "eslint-godaddy test/ ./*.js",
     "test": "istanbul cover _mocha -- test/*.test.js"
   },
   "repository": {
@@ -32,6 +33,10 @@
     "browserify": "~13.3.0",
     "clean-css": "~3.4.23",
     "errs": "~0.3.2",
+    "eslint": "^4.4.1",
+    "eslint-config-godaddy": "^2.0.0",
+    "eslint-plugin-json": "^1.2.0",
+    "eslint-plugin-mocha": "^4.11.0",
     "fingerprinting": "~1.0.1",
     "json-try-parse": "~1.0.0",
     "minimize": "~2.0.0",
