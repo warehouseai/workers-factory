@@ -447,8 +447,6 @@ describe('Factory', function () {
     });
 
     it('runs the stack in the scope of factory and emits messages', function (done) {
-      const old = process.exit;
-
       factory.on('task', (data) => {
         assume(data).to.have.property('message');
         assume(data).to.have.property('progress');
@@ -486,7 +484,7 @@ describe('Factory', function () {
 
     it('sends the error to the main process and exits', function (done) {
 
-      function next(error, cb) {
+      function next(error) {
         assume(error).to.be.instanceof(Error);
         assume(error.message).to.equal('test');
 

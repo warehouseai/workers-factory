@@ -458,13 +458,14 @@ Factory.prototype.stock = function stock(filename, src, encoding) {
  * acknowledge the user, also exits the child process to allow for retries.
  *
  * @param {Error} error Error from any factory step.
- * @api private
+ * @param {Function} done Callback function to execute
+ * @private
  */
 Factory.prototype.scrap = function scrap(error, done) {
   this.clean(function cleaned(err) {
     if (err) {
-      error  = errs.merge(error, {
-        innerError: errr.message,
+      error = errs.merge(error, {
+        innerError: err.message,
         event: 'error'
       });
     }
