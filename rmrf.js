@@ -1,4 +1,4 @@
-
+'use strict';
 
 const spawn = require('child_process').spawn;
 const once = require('one-time');

@@ -2,7 +2,7 @@
 /* eslint no-invalid-this: 0 */
 /* eslint no-sync: 0 */
 /* eslint consistent-return: 0 */
-
+'use strict';
 
 describe('Factory', function () {
   this.timeout(5E4);

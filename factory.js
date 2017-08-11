@@ -1,4 +1,4 @@
-
+'use strict';
 
 const EE = require('events').EventEmitter;
 const debug = require('diagnostics')('carpenterd:factory');
