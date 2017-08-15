@@ -2,7 +2,7 @@ module.exports = {
   context: __dirname,
   entry: './index.js',
   externals: {
-    'react': 'React'
+    react: 'React'
   },
   module: {
     loaders: [{

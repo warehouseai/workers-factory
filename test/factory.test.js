@@ -60,9 +60,9 @@ describe('Factory', function () {
         path.join(base, 'node_modules', '.bin', 'npm'),
         'install .'
       ].join(' '), next), function (error) {
-        if (error) return done(error);
-        done();
-      }
+      if (error) return done(error);
+      done();
+    }
     );
   });
 
@@ -220,7 +220,7 @@ describe('Factory', function () {
         assume(compressed[1]).to.equal(139);
         assume(compressed[2]).to.equal(8);
 
-        assume(zlib.gunzipSync(compressed).toString('utf-8')).to.equal(output)
+        assume(zlib.gunzipSync(compressed).toString('utf-8')).to.equal(output);
 
         done();
       });
@@ -274,7 +274,7 @@ describe('Factory', function () {
         assume(compressed[1]).to.equal(139);
         assume(compressed[2]).to.equal(8);
 
-        assume(zlib.gunzipSync(compressed).toString('utf-8')).to.equal(output)
+        assume(zlib.gunzipSync(compressed).toString('utf-8')).to.equal(output);
 
         done();
       });
@@ -447,8 +447,6 @@ describe('Factory', function () {
     });
 
     it('runs the stack in the scope of factory and emits messages', function (done) {
-      const old = process.exit;
-
       factory.on('task', (data) => {
         assume(data).to.have.property('message');
         assume(data).to.have.property('progress');
@@ -486,12 +484,12 @@ describe('Factory', function () {
 
     it('sends the error to the main process and exits', function (done) {
 
-      function next(error, cb) {
+      function next(error) {
         assume(error).to.be.instanceof(Error);
         assume(error.message).to.equal('test');
 
         done();
-      };
+      }
 
       factory.scrap(new Error('test'), next);
     });

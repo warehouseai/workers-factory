@@ -62,7 +62,7 @@ function Factory(data, run) {
   //
   // Default the config to empty
   //
-  this.config = { files: {} };
+  this.config = { files: {}};
   this.output = {};
   this.data = data;
   this.run = run;
@@ -87,7 +87,7 @@ Factory.prototype.unpack = function unpack(next) {
   debug(`Unpack ${ this.data.name } to ${ outputPath }`);
   fs.createReadStream(this.data.content)
     .once('error', next)
-    .pipe(zlib.Unzip())
+    .pipe(zlib.Unzip()) // eslint-disable-line new-cap
     .once('error', next)
     .pipe(tar.extract(outputPath))
     .once('error', next)
@@ -235,7 +235,7 @@ Factory.prototype.minify = function minify(next) {
         debug('Store supplementary minified files', supplementary);
 
         Object.keys(supplementary).forEach(key => {
-          factory.stock(key, supplementary[key])
+          factory.stock(key, supplementary[key]);
         });
       }
 
@@ -347,7 +347,8 @@ Factory.prototype.filter = function filt(file) {
  * Run the assembly line with scope series and expose results to the main thread.
  *
  * @param {Array} stack Factory functions to run in order.
- * @api public
+ * @param {Function} done Callback function to execute
+ * @public
  */
 Factory.prototype.line = function line(stack, done) {
   const factory = this;
@@ -402,8 +403,8 @@ Factory.prototype.files = function files(fn) {
       async.parallel([
         fs.writeFile.bind(fs, fullPath, src.content || src),
         !isSourceMap && fs.writeFile.bind(fs, fullPath + '.gz', factory.compressed[file])
-      ].filter(Boolean), (err) => {
-        if (err) return fn(err);
+      ].filter(Boolean), (error) => {
+        if (error) return fn(error);
 
         return next(null, {
           content: fullPath,
@@ -413,8 +414,8 @@ Factory.prototype.files = function files(fn) {
           extension: extensions[extension] || extension
         });
       });
-    }, (err, files) => {
-      if (err) return fn(err);
+    }, (error, files) => {
+      if (error) return fn(error);
       return fn(null, {
         config: factory.config,
         files
@@ -443,7 +444,7 @@ Factory.prototype.stock = function stock(filename, src, encoding) {
    * @api private
    */
   function buffer(content) {
-    return !Buffer.isBuffer(content) ? new Buffer(content, encoding) : content
+    return !Buffer.isBuffer(content) ? new Buffer(content, encoding) : content;
   }
 
   if (Object.hasOwnProperty.call(src, 'content')) src.content = buffer(src.content);
@@ -458,18 +459,19 @@ Factory.prototype.stock = function stock(filename, src, encoding) {
  * acknowledge the user, also exits the child process to allow for retries.
  *
  * @param {Error} error Error from any factory step.
- * @api private
+ * @param {Function} done Callback function to execute
+ * @private
  */
 Factory.prototype.scrap = function scrap(error, done) {
   this.clean(function cleaned(err) {
     if (err) {
-      error  = errs.merge(error, {
-        innerError: errr.message,
+      error = errs.merge(error, {
+        innerError: err.message,
         event: 'error'
       });
     }
 
-    done(error)
+    done(error);
   });
 };
 
