@@ -122,7 +122,8 @@ function webpack(opts, callback) {
     const webpackPath = path.join(root, '..', '..', 'bin', 'webpack.js');
     execFile(process.execPath, [webpackPath, '--config', config, '--bail'], {
       cwd: opts.base,
-      env: opts.processEnv || process.env // eslint-disable-line
+      env: opts.processEnv || process.env, // eslint-disable-line
+      timeout: opts.timeout || 10 * 60 * 1000 // default to 10mins for something sane
     }, function (err, stdout, stderr) {
       if (err) {
         err.output = stdout + stderr;
