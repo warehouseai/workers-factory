@@ -130,7 +130,7 @@ function webpack(opts, callback) {
         //
         // Rebuild and rerun if the error is special
         //
-        if (err.message.includes('npm rebuild')) {
+        if (err.output.includes('npm rebuild')) {
           return rebuild(opts, (err) => {
             if (err) return callback(err);
             webpack(opts, callback);
@@ -152,7 +152,7 @@ function webpack(opts, callback) {
 //
 function rebuild(opts, callback) {
   const npmPath = path.join(require.resolve('npm'), '..', '..', 'bin', 'npm-cli.js');
-  execFile(process.execPath, [npmPath, 'rebuild', 'node-sass'], {
+  execFile(process.execPath, [npmPath, 'rebuild', 'node-sass', '--force'], {
     cwd: opts.base,
     env: opts.processEnv || process.env
   }, callback);
