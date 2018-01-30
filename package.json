@@ -34,6 +34,7 @@
     "clean-css": "~3.4.23",
     "errs": "~0.3.2",
     "fingerprinting": "~1.0.1",
+    "gunzip-maybe": "^1.4.1",
     "json-try-parse": "~1.0.0",
     "minimize": "~2.0.0",
     "mkdirp": "~0.5.1",
