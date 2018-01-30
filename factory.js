@@ -8,6 +8,7 @@ const uglifyjs = require('./minifiers/uglifyjs');
 const fingerprinter = require('fingerprinting');
 const rmrf = require('./rmrf');
 const mkdirp = require('mkdirp');
+const gunzip = require('gunzip-maybe');
 const async = require('async');
 const tar = require('tar-fs');
 const errs = require('errs');
@@ -87,7 +88,7 @@ Factory.prototype.unpack = function unpack(next) {
   debug(`Unpack ${ this.data.name } to ${ outputPath }`);
   fs.createReadStream(this.data.content)
     .once('error', next)
-    .pipe(zlib.Unzip()) // eslint-disable-line new-cap
+    .pipe(gunzip()) // eslint-disable-line new-cap
     .once('error', next)
     .pipe(tar.extract(outputPath))
     .once('error', next)
