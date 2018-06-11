@@ -445,7 +445,7 @@ Factory.prototype.stock = function stock(filename, src, encoding) {
    * @api private
    */
   function buffer(content) {
-    return !Buffer.isBuffer(content) ? new Buffer(content, encoding) : content;
+    return !Buffer.isBuffer(content) ? Buffer.from(content, encoding) : content;
   }
 
   if (Object.hasOwnProperty.call(src, 'content')) src.content = buffer(src.content);
