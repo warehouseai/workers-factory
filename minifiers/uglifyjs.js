@@ -15,7 +15,7 @@ const rip = require('rip-out');
  */
 module.exports = function uglify(options, done) {
   let config = options.minify || {};
-  const mangleProperties = config.mangleProperties || {};
+  const mangleProperties = config.mangleProperties;
   const filename = options.file.replace('.js', '.min.js');
   const map = `${filename}.map`;
 
