@@ -36,7 +36,8 @@ module.exports = function uglify(options, done) {
       : config.mangle;
   }
 
-  if (config.mangle.properties
+  if (config.mangle
+      && config.mangle.properties
       && config.mangle.properties.regex
       && safe(config.mangle.properties.regex)) {
     config.mangle.properties.regex = new RegExp(config.mangle.properties.regex);

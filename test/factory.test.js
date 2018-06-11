@@ -355,7 +355,7 @@ describe('Factory', function () {
     it('can minify JS', function (done) {
       factory.data.env = 'prod';
       factory.output = {
-        //'index.js.map': JSON.stringify(map),
+        'index.js.map': JSON.stringify(map),
         'index.js': 'var test = true; function boolier(change) { test = !!change; }'
       };
 
@@ -363,7 +363,6 @@ describe('Factory', function () {
         if (error) return done(error);
 
         const sourceMap = JSON.parse(factory.output['index.min.js.map'].content);
-        console.dir(sourceMap);
         assume(factory.output).to.be.an('object');
         assume(factory.output['index.min.js'].content).to.be.instanceof(Buffer);
         assume(factory.output['index.min.js'].content.toString()).to.include('var test=!0;function boolier(t){test=!!t}');
@@ -374,7 +373,7 @@ describe('Factory', function () {
         assume(sourceMap).to.be.an('object');
         assume(sourceMap).to.have.property('version', 3);
         assume(sourceMap).to.have.property('file', 'index.min.js');
-        //assume(sourceMap).to.have.property('mappings', 'AAA0B,QAATA,SAAAA,GACVA,OAAOC,EADY,GAAAC,OAAA');
+        assume(sourceMap).to.have.property('mappings', 'AAA0B,IAAAA,MAAA,EAAA,SAATC,QAAAA,GACVA,OAAOC');
         done();
       });
     });
