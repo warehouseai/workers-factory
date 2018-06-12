@@ -70,8 +70,6 @@ module.exports = function uglify(options, done) {
   //
   const fingerprint = fingerprinter(options.file, { content: results.code, map: true });
 
-
-
   done(null, {
     content: results.code,
     fingerprint: fingerprint.id,
