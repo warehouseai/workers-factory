@@ -54,8 +54,9 @@ module.exports = function uglify(options, done) {
   config.sourceMap = config.sourceMap || {};
   // input sourcemap
   if (sourceMapContent) {
-    config.sourceMap.content = sourceMapContent;
+    config.sourceMap.content = JSON.stringify(sourceMapContent);
   }
+  config.sourceMap.includeSources = true;
   // filename reference of the code that the sourcemap maps to
   config.sourceMap.filename = filename;
   // output sourcemap url to append to code content
