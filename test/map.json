@@ -7,6 +7,11 @@
     "widget.js"
   ],
   "sourceRoot": "/",
+  "sourcesContent": [
+    "why",
+    "do",
+    "this"
+  ],
   "names": [
     "slideUp",
     "slideDown",

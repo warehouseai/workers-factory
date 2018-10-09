@@ -373,6 +373,7 @@ describe('Factory', function () {
         assume(sourceMap).to.be.an('object');
         assume(sourceMap).to.have.property('version', 3);
         assume(sourceMap).to.have.property('file', 'index.min.js');
+        assume(sourceMap).to.have.property('sourcesContent');
         assume(sourceMap).to.have.property('mappings', 'AAA0B,IAAAA,MAAA,EAAA,SAATC,QAAAA,GACVA,OAAOC');
         done();
       });
