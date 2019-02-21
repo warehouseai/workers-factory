@@ -6,6 +6,7 @@ const cleancss = require('./minifiers/cleancss');
 const minimize = require('./minifiers/minimize');
 const uglifyjs = require('./minifiers/uglifyjs');
 const fingerprinter = require('fingerprinting');
+const extract = require('@wrhs/extract-config');
 const rmrf = require('./rmrf');
 const mkdirp = require('mkdirp');
 const gunzip = require('gunzip-maybe');
@@ -113,41 +114,10 @@ Factory.prototype.init = function init(next) {
   // Read the package.json AND the wrhs.toml
   //
   debug(`Read package.json: ${ pkg } and wrhs.toml: ${ wrhs }`);
-  async.parallel([
-    function packJson(fn) {
-      fs.readFile(pkg, 'utf-8', function read(error, content) {
-        if (error) return void fn(error);
-
-        try {
-          factory.pkg = JSON.parse(content);
-          factory.entry = path.join(base, entry || factory.pkg.main);
-        } catch (err) {
-          return fn(err);
-        }
-
-        debug(`Set entry of factory to ${ factory.entry }`);
-        debug(`Parsed package.json content`, factory.pkg);
-        return fn();
-      });
-    },
-    function whrsCfg(fn) {
-      fs.readFile(wrhs, 'utf-8', function readme(error, content) {
-        if (error && error.code === 'ENOENT') return void fn();
-        if (error) return fn(error);
-
-        try {
-          factory.config = toml.parse(content);
-        } catch (err) {
-          return fn(err);
-        }
-
-        debug(`Parsed wrhs.toml content`, factory.config);
-        return fn();
-      });
-    }
-  ], function (err) {
+  extract(base, (err, config) => {
     if (err) return void next(err);
 
+    debug(`Parsed configuration`, config);
     return void next();
   });
 };
