@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint-godaddy test/*.test.js ./*.js",
-    "test": "npm run lint && nyc npm run test:unit",
+    "test": "nyc npm run test:unit",
+    "posttest": "npm run lint",
     "test:unit": "mocha test/*.test.js",
     "test:debug": "npm run test:unit -- --inspect-brk"
   },
