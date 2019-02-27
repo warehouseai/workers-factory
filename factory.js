@@ -15,7 +15,6 @@ const tar = require('tar-fs');
 const errs = require('errs');
 const zlib = require('zlib');
 const path = require('path');
-const toml = require('toml');
 const util = require('util');
 const fs = require('fs');
 const os = require('os');
@@ -64,7 +63,7 @@ function Factory(data, run) {
   //
   // Default the config to empty
   //
-  this.config = { files: {}};
+  this.config = { files: {} };
   this.output = {};
   this.data = data;
   this.run = run;
@@ -356,7 +355,7 @@ Factory.prototype.line = function line(stack, done) {
  * @returns {void}
  * @api private
  */
-Factory.prototype.files = function files(fn) {
+Factory.prototype.files = function (fn) {
   var factory = this;
 
   mkdirp(this.dest, (err) => {

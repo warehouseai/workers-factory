@@ -4,8 +4,8 @@
   "description": "A set of different workers for building frontend applications",
   "main": "index.js",
   "scripts": {
-    "eslint": "eslint-godaddy test/*.test.js ./*.js",
-    "test": "nyc npm run test:unit",
+    "lint": "eslint-godaddy test/*.test.js ./*.js",
+    "test": "npm run lint && nyc npm run test:unit",
     "test:unit": "mocha test/*.test.js",
     "test:debug": "npm run test:unit -- --inspect-brk"
   },
