@@ -113,7 +113,7 @@ Factory.prototype.init = function init(next) {
   //
   debug(`Read package.json: ${ pkg } and wrhs.toml: ${ wrhs }`);
   extract(base)
-    .then({ pkg, wrhs } => {
+    .then(({ pkg, wrhs }) => {
       debug(`Read configuration: ${ wrhs }`);
       factory.pkg = pkg;
       factory.entry = path.join(base, entry || pkg.main);
