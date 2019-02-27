@@ -4,8 +4,11 @@
   "description": "A set of different workers for building frontend applications",
   "main": "index.js",
   "scripts": {
-    "eslint": "eslint-godaddy test/*.test.js ./*.js",
-    "test": "nyc mocha test/*.test.js"
+    "lint": "eslint-godaddy test/*.test.js ./*.js",
+    "test": "nyc npm run test:unit",
+    "posttest": "npm run lint",
+    "test:unit": "mocha test/*.test.js",
+    "test:debug": "npm run test:unit -- --inspect-brk"
   },
   "repository": {
     "type": "git",
@@ -25,6 +28,7 @@
   },
   "homepage": "https://github.com/warehouseai/workers-factory#readme",
   "dependencies": {
+    "@wrhs/extract-config": "^1.0.0",
     "async": "~2.1.4",
     "babel-core": "~6.21.0",
     "babel-preset-es2015": "~6.18.0",

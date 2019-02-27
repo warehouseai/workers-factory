@@ -6,6 +6,7 @@ const cleancss = require('./minifiers/cleancss');
 const minimize = require('./minifiers/minimize');
 const uglifyjs = require('./minifiers/uglifyjs');
 const fingerprinter = require('fingerprinting');
+const extract = require('@wrhs/extract-config');
 const rmrf = require('./rmrf');
 const mkdirp = require('mkdirp');
 const gunzip = require('gunzip-maybe');
@@ -14,7 +15,6 @@ const tar = require('tar-fs');
 const errs = require('errs');
 const zlib = require('zlib');
 const path = require('path');
-const toml = require('toml');
 const util = require('util');
 const fs = require('fs');
 const os = require('os');
@@ -63,7 +63,7 @@ function Factory(data, run) {
   //
   // Default the config to empty
   //
-  this.config = { files: {}};
+  this.config = { files: {} };
   this.output = {};
   this.data = data;
   this.run = run;
@@ -106,50 +106,16 @@ Factory.prototype.init = function init(next) {
   const entry = this.data.entry;
   const base = this.base;
   const factory = this;
-  const pkg = path.join(base, 'package.json');
-  const wrhs = path.join(base, 'wrhs.toml');
 
-  //
-  // Read the package.json AND the wrhs.toml
-  //
-  debug(`Read package.json: ${ pkg } and wrhs.toml: ${ wrhs }`);
-  async.parallel([
-    function packJson(fn) {
-      fs.readFile(pkg, 'utf-8', function read(error, content) {
-        if (error) return void fn(error);
-
-        try {
-          factory.pkg = JSON.parse(content);
-          factory.entry = path.join(base, entry || factory.pkg.main);
-        } catch (err) {
-          return fn(err);
-        }
-
-        debug(`Set entry of factory to ${ factory.entry }`);
-        debug(`Parsed package.json content`, factory.pkg);
-        return fn();
-      });
-    },
-    function whrsCfg(fn) {
-      fs.readFile(wrhs, 'utf-8', function readme(error, content) {
-        if (error && error.code === 'ENOENT') return void fn();
-        if (error) return fn(error);
-
-        try {
-          factory.config = toml.parse(content);
-        } catch (err) {
-          return fn(err);
-        }
-
-        debug(`Parsed wrhs.toml content`, factory.config);
-        return fn();
-      });
-    }
-  ], function (err) {
-    if (err) return void next(err);
-
-    return void next();
-  });
+  extract(base)
+    .then(({ pkg, wrhs }) => {
+      debug(`Read configuration: ${ wrhs }`);
+      factory.pkg = pkg;
+      factory.entry = path.join(base, entry || pkg.main);
+      factory.config = wrhs;
+    })
+    .then(() => next())
+    .catch(err => next(err));
 };
 
 /**
@@ -389,7 +355,7 @@ Factory.prototype.line = function line(stack, done) {
  * @returns {void}
  * @api private
  */
-Factory.prototype.files = function files(fn) {
+Factory.prototype.files = function (fn) {
   var factory = this;
 
   mkdirp(this.dest, (err) => {
