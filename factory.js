@@ -107,19 +107,20 @@ Factory.prototype.init = function init(next) {
   const entry = this.data.entry;
   const base = this.base;
   const factory = this;
-  const pkg = path.join(base, 'package.json');
-  const wrhs = path.join(base, 'wrhs.toml');
 
   //
   // Read the package.json AND the wrhs.toml
   //
   debug(`Read package.json: ${ pkg } and wrhs.toml: ${ wrhs }`);
-  extract(base, (err, config) => {
-    if (err) return void next(err);
-
-    debug(`Parsed configuration`, config);
-    return void next();
-  });
+  extract(base)
+    .then({ pkg, wrhs } => {
+      debug(`Read configuration: ${ wrhs }`);
+      factory.pkg = pkg;
+      factory.entry = path.join(base, entry || pkg.main);
+      factory.config = wrhs;
+    })
+    .then(() => next())
+    .catch(err => next(err));
 };
 
 /**
