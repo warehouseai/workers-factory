@@ -108,10 +108,6 @@ Factory.prototype.init = function init(next) {
   const base = this.base;
   const factory = this;
 
-  //
-  // Read the package.json AND the wrhs.toml
-  //
-  debug(`Read package.json: ${ pkg } and wrhs.toml: ${ wrhs }`);
   extract(base)
     .then(({ pkg, wrhs }) => {
       debug(`Read configuration: ${ wrhs }`);
