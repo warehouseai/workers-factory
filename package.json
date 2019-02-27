@@ -1,6 +1,6 @@
 {
   "name": "workers-factory",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "description": "A set of different workers for building frontend applications",
   "main": "index.js",
   "scripts": {
@@ -54,10 +54,10 @@
   },
   "devDependencies": {
     "assume": "^2.0.1",
-    "eslint": "^4.4.1",
-    "eslint-config-godaddy-react": "^2.0.0",
+    "eslint": "^5.14.0",
+    "eslint-config-godaddy-react": "^4.1.0",
     "eslint-plugin-json": "^1.2.0",
-    "eslint-plugin-mocha": "^4.11.0",
+    "eslint-plugin-mocha": "^5.3.0",
     "eslint-plugin-react": "^7.1.0",
     "mocha": "^5.2.0",
     "nyc": "^13.3.0"
