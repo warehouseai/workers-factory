@@ -13,7 +13,7 @@ generate builds for [Warehouse.ai].
 ## Install
 
 ```sh
-$ npm install workers-factory --save
+npm install workers-factory --save
 ```
 
 ## Usage
