@@ -1,5 +1,7 @@
 # Changelog
 
+### 1.7.6
+
 - [#18] Add collected documentation and badges.
   - Add LICENSE file
   - Update `README.md` with API documentation
