@@ -67,7 +67,7 @@ module.exports = function uglify(options, done) {
   if (results.error) return done(results.error);
 
   //
-  // Get hash for content. The sourceMap and JS content need to be stored under the same hash.
+  // Get hash for content.
   //
   const fingerprint = fingerprinter(options.file, { content: results.code, map: true });
 
@@ -77,8 +77,7 @@ module.exports = function uglify(options, done) {
     filename: filename
   }, {
     [map]: {
-      content: results.map,
-      fingerprint: fingerprint.id
+      content: results.map
     }
   });
 };
