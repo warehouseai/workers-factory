@@ -1,5 +1,7 @@
 # Changelog
 
+- [#19] Do not set `fingerprint` property on `.map` files. `bffs` will do this now.
+
 ### 1.7.6
 
 - [#18] Add collected documentation and badges.
@@ -8,3 +10,4 @@
   - Update `tar-fs@1.16` to resolve security warning
 
 [#18]: https://github.com/warehouseai/extract-config/pull/18
+[#19]: https://github.com/warehouseai/extract-config/pull/19

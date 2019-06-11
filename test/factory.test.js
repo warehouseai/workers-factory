@@ -369,6 +369,7 @@ describe('Factory', function () {
         assume(factory.output['index.min.js'].content.toString()).to.include('\n//# sourceMappingURL=index.min.js.map');
         assume(factory.output['index.min.js'].fingerprint).to.equal('8fbdebb353a0952379baef3ec769bd9d');
         assume(factory.output['index.min.js.map'].content).to.be.instanceof(Buffer);
+        assume(factory.output['index.min.js.map']).to.not.have.property('fingerprint');
 
         assume(sourceMap).to.be.an('object');
         assume(sourceMap).to.have.property('version', 3);
