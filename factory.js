@@ -376,7 +376,7 @@ Factory.prototype.files = function (fn) {
         return next(null, {
           content: fullPath,
           compressed: fullPath + '.gz',
-          fingerprint: src.fingerprint || fingerprinter(factory.entry, { content: src }).id,
+          fingerprint: src.fingerprint || fingerprinter(fullPath, { content: src.content || src }).id,
           filename: src.filename || file,
           extension: extensions[extension] || extension
         });

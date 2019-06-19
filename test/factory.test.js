@@ -18,8 +18,13 @@ describe('Factory', function () {
   const zlib = require('zlib');
   const toml = require('toml');
   const fs = require('fs');
+  const os = require('os');
+  const mkdirp = require('mkdirp');
+  const rmrf = require('../rmrf');
 
   const assign = Object.assign;
+
+  const destDir =  path.join(os.tmpdir(), 'makeitwork');
 
   let factory;
 
@@ -29,6 +34,7 @@ describe('Factory', function () {
   function config(name) {
     return {
       source: path.join(__dirname, 'fixtures'),
+      destDir,
       target: '/tmp',
       clean: false,
       minify: true,
@@ -173,6 +179,15 @@ describe('Factory', function () {
   });
 
   describe('#assemble', function () {
+
+    beforeEach(function (next) {
+      mkdirp(destDir, next);
+    });
+
+    afterEach(function (next) {
+      rmrf(destDir, next);
+    });
+
     function run(local, done) {
       local.init(function (error) {
         if (error) return done(error);
@@ -280,19 +295,30 @@ describe('Factory', function () {
       });
     });
 
-    it('can run more complicated webpack builds with multiple output files', function (done) {
+    it('can run more complicated webpack builds with multiple output files, minify and write to disk', function (done) {
       const data = config('other');
 
       this.timeout(5000);
       data.entry = 'webpack.config.js';
-
-      run(new Factory(data, webpackworker.run), function (error, factory) {
+      run(new Factory(data, webpackworker.run), function (error, fact) {
         if (error) return done(error);
 
-        assume(Object.keys(factory.output)).to.have.length(4);
-        assume(Object.keys(factory.compressed)).to.have.length(4);
+        assume(Object.keys(fact.output)).to.have.length(4);
+        assume(Object.keys(fact.compressed)).to.have.length(4);
 
-        done();
+        //
+        // This tests the last bits where we minify as well as write to disk
+        //
+        fact.minify((err) => {
+          assume(err).is.falsey();
+          // adds 4 map files and 4 minified files
+          assume(Object.keys(fact.output)).to.have.length(12);
+          fact.files((err, res) => {
+            assume(err).is.falsey();
+            assume(res.files).to.have.length(Object.keys(fact.output).length);
+            done();
+          });
+        });
       });
     });
   });
@@ -369,7 +395,6 @@ describe('Factory', function () {
         assume(factory.output['index.min.js'].content.toString()).to.include('\n//# sourceMappingURL=index.min.js.map');
         assume(factory.output['index.min.js'].fingerprint).to.equal('8fbdebb353a0952379baef3ec769bd9d');
         assume(factory.output['index.min.js.map'].content).to.be.instanceof(Buffer);
-        assume(factory.output['index.min.js.map']).to.not.have.property('fingerprint');
 
         assume(sourceMap).to.be.an('object');
         assume(sourceMap).to.have.property('version', 3);
