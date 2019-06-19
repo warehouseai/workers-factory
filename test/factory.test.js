@@ -300,21 +300,22 @@ describe('Factory', function () {
 
       this.timeout(5000);
       data.entry = 'webpack.config.js';
-      const fact = new Factory(data, webpackworker.run);
-      run(fact, function (error, factory) {
+      run(new Factory(data, webpackworker.run), function (error, fact) {
         if (error) return done(error);
 
-        assume(Object.keys(factory.output)).to.have.length(4);
-        assume(Object.keys(factory.compressed)).to.have.length(4);
+        assume(Object.keys(fact.output)).to.have.length(4);
+        assume(Object.keys(fact.compressed)).to.have.length(4);
 
         //
         // This tests the last bits where we minify as well as write to disk
         //
         fact.minify((err) => {
           assume(err).is.falsey();
+          // adds 4 map files and 4 minified files
+          assume(Object.keys(fact.output)).to.have.length(12);
           fact.files((err, res) => {
             assume(err).is.falsey();
-            assume(res.files).to.have.length(Object.keys(factory.output).length);
+            assume(res.files).to.have.length(Object.keys(fact.output).length);
             done();
           });
         });
