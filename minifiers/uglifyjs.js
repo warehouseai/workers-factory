@@ -77,7 +77,8 @@ module.exports = function uglify(options, done) {
     filename: filename
   }, {
     [map]: {
-      content: results.map
+      content: results.map,
+      fingerprint: fingerprint.id
     }
   });
 };
