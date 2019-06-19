@@ -184,7 +184,7 @@ describe('Factory', function () {
       mkdirp(destDir, next);
     });
 
-    beforeEach(function (next) {
+    afterEach(function (next) {
       rmrf(destDir, next);
     });
 
