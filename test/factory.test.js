@@ -314,7 +314,6 @@ describe('Factory', function () {
           assume(err).is.falsey();
           fact.files((err, res) => {
             assume(err).is.falsey();
-            console.dir(res);
             assume(res.files).to.have.length(Object.keys(factory.output).length);
             done();
           });
