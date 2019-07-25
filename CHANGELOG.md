@@ -1,5 +1,6 @@
 # Changelog
 
+- [#21] Remove ES6 worker, update dependencies `nyc` and `clean-css`.
 - [#19] Do not set `fingerprint` property on `.map` files. `bffs` will do this now.
 
 ### 1.7.6
@@ -11,3 +12,4 @@
 
 [#18]: https://github.com/warehouseai/extract-config/pull/18
 [#19]: https://github.com/warehouseai/extract-config/pull/19
+[#21]: https://github.com/warehouseai/extract-config/pull/21
