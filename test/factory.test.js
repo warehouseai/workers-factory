@@ -8,7 +8,6 @@ describe('Factory', function () {
   this.timeout(5E4);
   const browserifyworker = require('../workers/browserify');
   const webpackworker = require('../workers/webpack');
-  const es6worker = require('../workers/es6');
   const Factory = require('../factory');
   const exec = require('child_process').exec;
   const map = require('./fixtures/map');
@@ -54,7 +53,7 @@ describe('Factory', function () {
   //
   before(function (done) {
     const base = path.join(__dirname, '..');
-    const locations = ['es6', 'webpack', 'browserify', 'other'];
+    const locations = ['webpack', 'browserify', 'other'];
 
     this.timeout(6E5);
 
@@ -73,7 +72,7 @@ describe('Factory', function () {
   });
 
   beforeEach(function () {
-    factory = new Factory(config('es6'), es6worker.run);
+    factory = new Factory(config('webpack'), webpackworker.run);
   });
 
   afterEach(function () {
