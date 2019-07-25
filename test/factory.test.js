@@ -88,7 +88,7 @@ describe('Factory', function () {
   it('stores some required values on its instance', function () {
     assume(factory).to.have.property('data');
     assume(factory).to.have.property('output');
-    assume(factory).to.have.property('base', path.join(__dirname, 'fixtures', 'es6'));
+    assume(factory).to.have.property('base', path.join(__dirname, 'fixtures', 'webpack'));
   });
 
   describe('#init', function () {
@@ -107,7 +107,7 @@ describe('Factory', function () {
         assume(factory.pkg.dependencies).to.have.property('react', '~0.13.3');
 
         assume(factory.entry).to.be.a('string');
-        assume(factory.entry).to.include('test/fixtures/es6/sum.js');
+        assume(factory.entry).to.include('test/fixtures/webpack/sum.js');
 
         done();
       });
@@ -116,7 +116,7 @@ describe('Factory', function () {
     it('defaults to the `main` property of the package.json as entry file', function (done) {
       factory.init(function () {
         assume(factory.entry).to.be.a('string');
-        assume(factory.entry).to.include('test/fixtures/es6/index.js');
+        assume(factory.entry).to.include('test/fixtures/webpack/index.js');
 
         done();
       });
@@ -151,6 +151,7 @@ describe('Factory', function () {
         factory.read(function (error) {
           assume(error).is.falsey();
           assume(factory.source).to.be.a('string');
+          console.log(factory.source);
           assume(factory.source).to.include('return <p>Build an ES6 React component.</p>;');
           done();
         });
