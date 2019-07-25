@@ -60,8 +60,6 @@ it completes without errors._
   `browserify.bundle` method.
 - **Webpack**: Will read `webpack.config.js` from tarball content and
   execute the bundled [Webpack] to generate a build of assets.
-- **ES6**: Compiles the entry file to ES6 using [Babel]. Only supports
-  the presets `babel-preset-es2015`, `babel-preset-react` at the moment.
 
 ### Minification
 
