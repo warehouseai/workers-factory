@@ -1,6 +1,6 @@
 # Changelog
 
-- [#21] Remove ES6 worker, update dependencies `nyc` and `clean-css`.
+- [#21] Remove ES6 worker, update all dependencies to latest.
 - [#19] Do not set `fingerprint` property on `.map` files. `bffs` will do this now.
 
 ### 1.7.6
