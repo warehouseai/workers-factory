@@ -1,14 +1,12 @@
 /* eslint max-nested-callbacks: 0 */
-/* eslint no-invalid-this: 0 */
 /* eslint no-sync: 0 */
-/* eslint consistent-return: 0 */
+/* eslint max-statements: 0 */
 'use strict';
 
 describe('Factory', function () {
   this.timeout(5E4);
   const browserifyworker = require('../workers/browserify');
   const webpackworker = require('../workers/webpack');
-  const es6worker = require('../workers/es6');
   const Factory = require('../factory');
   const exec = require('child_process').exec;
   const map = require('./fixtures/map');
@@ -54,7 +52,7 @@ describe('Factory', function () {
   //
   before(function (done) {
     const base = path.join(__dirname, '..');
-    const locations = ['es6', 'webpack', 'browserify', 'other'];
+    const locations = ['webpack', 'browserify', 'other'];
 
     this.timeout(6E5);
 
@@ -73,7 +71,7 @@ describe('Factory', function () {
   });
 
   beforeEach(function () {
-    factory = new Factory(config('es6'), es6worker.run);
+    factory = new Factory(config('webpack'), webpackworker.run);
   });
 
   afterEach(function () {
@@ -89,7 +87,7 @@ describe('Factory', function () {
   it('stores some required values on its instance', function () {
     assume(factory).to.have.property('data');
     assume(factory).to.have.property('output');
-    assume(factory).to.have.property('base', path.join(__dirname, 'fixtures', 'es6'));
+    assume(factory).to.have.property('base', path.join(__dirname, 'fixtures', 'webpack'));
   });
 
   describe('#init', function () {
@@ -108,7 +106,7 @@ describe('Factory', function () {
         assume(factory.pkg.dependencies).to.have.property('react', '~0.13.3');
 
         assume(factory.entry).to.be.a('string');
-        assume(factory.entry).to.include('test/fixtures/es6/sum.js');
+        assume(factory.entry).to.include('test/fixtures/webpack/sum.js');
 
         done();
       });
@@ -117,7 +115,7 @@ describe('Factory', function () {
     it('defaults to the `main` property of the package.json as entry file', function (done) {
       factory.init(function () {
         assume(factory.entry).to.be.a('string');
-        assume(factory.entry).to.include('test/fixtures/es6/index.js');
+        assume(factory.entry).to.include('test/fixtures/webpack/index.js');
 
         done();
       });
@@ -152,7 +150,7 @@ describe('Factory', function () {
         factory.read(function (error) {
           assume(error).is.falsey();
           assume(factory.source).to.be.a('string');
-          assume(factory.source).to.include('return <p>Build an ES6 React component.</p>;');
+          assume(factory.source).to.include('return <p>Webpack an ES6 React component.</p>;');
           done();
         });
       });
@@ -171,7 +169,7 @@ describe('Factory', function () {
 
     it('runs other filter functions that are configured with the instance', function () {
       const fact = new Factory(assign({},
-        config('es6'), { filter: (file) => path.extname(file) === '.css' }), es6worker.run);
+        config('webpack'), { filter: (file) => path.extname(file) === '.css' }), webpackworker.run);
 
       assume(fact.filter('something.js')).equals(false);
       assume(fact.filter('something.css')).equals(true);
@@ -189,25 +187,13 @@ describe('Factory', function () {
     });
 
     function run(local, done) {
-      local.init(function (error) {
-        if (error) return done(error);
+      async.series([local.init, local.read, local.assemble, local.pack].map(f => f.bind(local)), function (error) {
+        assume(error).to.equal(null);
 
-        local.read(function (error) {
-          if (error) return done(error);
+        assume(local.output).to.be.an('object');
+        assume(local.compressed).to.be.an('object');
 
-          local.assemble(function (error) {
-            if (error) return done(error);
-
-            local.pack(function (error) {
-              assume(error).to.equal(null);
-
-              assume(local.output).to.be.an('object');
-              assume(local.compressed).to.be.an('object');
-
-              done(error, local);
-            });
-          });
-        });
+        done(error, local);
       });
     }
 
@@ -216,17 +202,20 @@ describe('Factory', function () {
       assume(factory.assemble).to.have.length(1);
     });
 
-    it('runs the build, transpiles es6 and gzips the data', function (done) {
-      this.timeout(5000);
+    it('runs a webpack build and gzips the data', function (done) {
+      const data = config('webpack');
 
-      run(factory, function (error, factory) {
+      this.timeout(5000);
+      data.entry = 'webpack.config.js';
+
+      run(new Factory(data, webpackworker.run), function (error, build) {
         if (error) return done(error);
 
-        const output = factory.output['index.js'].toString('utf-8');
-        const compressed = factory.compressed['index.js'];
+        const output = build.output['bundle.js'].toString('utf-8');
+        const compressed = build.compressed['bundle.js'];
 
-        assume(factory.base).to.include('es6');
-        assume(output).to.include('Build an ES6 React component');
+        assume(build.base).to.include('webpack');
+        assume(output).to.include('Webpack an ES6 React component');
         assume(output).to.include('return _react.React.createElement(');
         assume(output).to.include('_inherits(Test, _React$Component);');
 
@@ -244,45 +233,17 @@ describe('Factory', function () {
     it('can run browserify builds', function (done) {
       this.timeout(5000);
 
-      run(new Factory(config('browserify'), browserifyworker.run), function (error, factory) {
+      run(new Factory(config('browserify'), browserifyworker.run), function (error, build) {
         if (error) return done(error);
 
-        const output = factory.output['index.js'].toString('utf-8');
-        const compressed = factory.compressed['index.js'];
+        const output = build.output['index.js'].toString('utf-8');
+        const compressed = build.compressed['index.js'];
 
-        assume(factory.base).to.include('browserify');
+        assume(build.base).to.include('browserify');
         assume(output).to.include('Browserify an ES6 React component');
         assume(output).to.include('return _react.React.createElement(');
         assume(output).to.include('_inherits(Test, _React$Component);');
         assume(output).to.include('typeof require&&require');
-
-        // test for gzip header magic numbers and deflate compression
-        assume(compressed[0]).to.equal(31);
-        assume(compressed[1]).to.equal(139);
-        assume(compressed[2]).to.equal(8);
-
-        assume(zlib.gunzipSync(compressed).toString('utf-8')).to.equal(output);
-
-        done();
-      });
-    });
-
-    it('can run webpack builds', function (done) {
-      const data = config('webpack');
-
-      this.timeout(5000);
-      data.entry = 'webpack.config.js';
-
-      run(new Factory(data, webpackworker.run), function (error, factory) {
-        if (error) return done(error);
-
-        const output = factory.output['bundle.js'].toString('utf-8');
-        const compressed = factory.compressed['bundle.js'];
-
-        assume(factory.base).to.include('webpack');
-        assume(output).to.include('Webpack an ES6 React component');
-        assume(output).to.include('return _react.React.createElement(');
-        assume(output).to.include('_inherits(Test, _React$Component);');
 
         // test for gzip header magic numbers and deflate compression
         assume(compressed[0]).to.equal(31);
@@ -313,8 +274,8 @@ describe('Factory', function () {
           assume(err).is.falsey();
           // adds 4 map files and 4 minified files
           assume(Object.keys(fact.output)).to.have.length(12);
-          fact.files((err, res) => {
-            assume(err).is.falsey();
+          fact.files((e, res) => {
+            assume(e).is.falsey();
             assume(res.files).to.have.length(Object.keys(fact.output).length);
             done();
           });
@@ -439,9 +400,9 @@ describe('Factory', function () {
 
         assume(factory.output).to.be.an('object');
         assume(factory.output['base.min.css'].content).to.be.instanceof(Buffer);
-        assume(factory.output['base.min.css'].content.toString()).to.include('span{margin:0;font-size:12px;color:#FFF}');
+        assume(factory.output['base.min.css'].content.toString()).to.include('span{margin:0;font-size:12px;color:#fff}');
         assume(factory.output['base.min.css'].content.toString()).to.include('/*# sourceMappingURL=base.min.css.map */');
-        assume(factory.output['base.min.css'].fingerprint).to.equal('c1ca21d1fe09e2816067d80e3d9368bd');
+        assume(factory.output['base.min.css'].fingerprint).to.equal('6b06b97e3d44e5578ef46d04c8bb86cc');
         assume(factory.output['base.min.css.map'].content).to.be.instanceof(Buffer);
         done();
       });

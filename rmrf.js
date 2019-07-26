@@ -16,7 +16,7 @@ module.exports = function rmrf(filePath, next) {
   let errorLogs = '';
 
   const child = spawn('rm', ['-rf', filePath], {
-    env: process.env
+    env: process.env // eslint-disable-line no-process-env
   });
 
   child.on('error', done);
