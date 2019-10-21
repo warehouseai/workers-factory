@@ -1,5 +1,9 @@
 # Changelog
 
+### 3.0.1
+
+- [#22] Fix rebuild to work in latest webpack
+
 ### 3.0.0
 
 - [#21] Remove ES6 worker, update all dependencies to latest.
@@ -12,6 +16,7 @@
   - Update `README.md` with API documentation
   - Update `tar-fs@1.16` to resolve security warning
 
-[#18]: https://github.com/warehouseai/extract-config/pull/18
-[#19]: https://github.com/warehouseai/extract-config/pull/19
-[#21]: https://github.com/warehouseai/extract-config/pull/21
+[#18]: https://github.com/warehouseai/workers-factorypull/18
+[#19]: https://github.com/warehouseai/workers-factory/pull/19
+[#21]: https://github.com/warehouseai/workers-factory/pull/21
+[#22]:  https://github.com/warehouseai/workers-factory/pull/22
