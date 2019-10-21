@@ -1,5 +1,9 @@
 # Changelog
 
+### 3.0.2
+
+- Update npm version
+
 ### 3.0.1
 
 - [#22] Fix rebuild to work in latest webpack
