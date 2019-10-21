@@ -130,7 +130,7 @@ function webpack(opts, callback) {
         //
         // Rebuild and rerun if the error is special
         //
-        if (err.output.includes('npm rebuild')) {
+        if (err.output.includes('npm rebuild') || err.output.includes('Error: Node Sass does not yet support your current environment')) {
           return rebuild(opts, (err) => {
             if (err) return callback(err);
             webpack(opts, callback);
