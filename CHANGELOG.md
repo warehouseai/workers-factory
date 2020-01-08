@@ -1,6 +1,6 @@
 # Changelog
 
-- [#23] Add `terser` as minification option.
+- [#26] Add `terser` as minification option.
 
 ### 3.0.2
 
@@ -26,4 +26,4 @@
 [#19]: https://github.com/warehouseai/workers-factory/pull/19
 [#21]: https://github.com/warehouseai/workers-factory/pull/21
 [#22]:  https://github.com/warehouseai/workers-factory/pull/22
-[#23]:  https://github.com/warehouseai/workers-factory/pull/23
+[#26]:  https://github.com/warehouseai/workers-factory/pull/26
