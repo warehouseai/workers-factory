@@ -22,6 +22,14 @@ class Config {
     this.values = this.normalize(minify, sourceMapContent);
   }
 
+  /**
+   * Normalize configuration to have required set of options.
+   *
+   * @param {Object} minify base configuration from wrhs.toml.
+   * @param {String} sourceMapContent JSON representation of sourceMap.
+   * @returns {Object} configuration
+   * @public
+   */
   normalize(minify = {}, sourceMapContent) {
     const config = cloneDeep(minify);
 
@@ -56,16 +64,34 @@ class Config {
     return config;
   }
 
+  /**
+   * Return filename of the sourceMap.
+   *
+   * @returns {String} filename
+   * @public
+   */
   get map() {
     return `${this.filename}.map`;
   }
 
+  /**
+   * Return Terser configuration. Clone to prevent downstream changes to `values`.
+   *
+   * @returns {Object} configuration
+   * @public
+   */
   get terser() {
     const config = rip(this.values, 'minifier');
 
-    return config;
+    return cloneDeep(config);
   }
 
+  /**
+   * Return UglifyJS configuration. Clone to prevent downstream changes to `values`.
+   *
+   * @returns {Object} configuration
+   * @public
+   */
   get uglifyjs() {
     const config = rip(this.values, 'mangleProperties');
     const mangleProperties = config.mangleProperties;
@@ -87,7 +113,7 @@ class Config {
     config.parse.bare_returns = true;
     config.compress.reduce_vars = true;
 
-    return config;
+    return cloneDeep(config);
   }
 }
 
