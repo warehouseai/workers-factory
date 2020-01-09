@@ -4,6 +4,34 @@ const safe = require('safe-regex');
 const rip = require('rip-out');
 
 /**
+ * Convert value to Regular Expression. Return value if it is unsafe.
+ *
+ * @param {String} value RegExp-like string.
+ * @returns {RegExp|String} Converted value
+ * @private
+ */
+function regexp(value) {
+  if (!safe(value)) return value;
+
+  return new RegExp(value);
+}
+
+/**
+ * Transform configured properties to a Regular Expression to enable advanced
+ * mangling of properties.
+ *
+ * @param {Object} config Configuration.
+ * @returns {Object} transformed configuration
+ */
+function transformMangleRegex(config = {}) {
+  if (config.mangle && config.mangle.properties && config.mangle.properties.regex) {
+    config.mangle.properties.regex = regexp(config.mangle.properties.regex);
+  }
+
+  return config;
+}
+
+/**
  * Normalized configuration for various minifiers.
  *
  * @class Config
@@ -20,19 +48,6 @@ class Config {
     // Prevent polution of wrhs.toml by normalizing and cloning configuration.
     //
     this.values = this.normalize(minify, sourceMapContent);
-  }
-
-  /**
-   * Convert value to Regular Expression. Return value if it is unsafe.
-   *
-   * @param {String} value RegExp-like string.
-   * @returns {RegExp|String} Converted value
-   * @private
-   */
-  regexp(value) {
-    if (!safe(value)) return value;
-
-    return new RegExp(value);
   }
 
   /**
@@ -87,13 +102,13 @@ class Config {
    * @public
    */
   get terser() {
-    const config = rip(this.values, 'minifier');
+    let config = cloneDeep(
+      rip(this.values, 'minifier')
+    );
 
-    if (config.mangle && config.mangle.properties && config.mangle.properties.regex) {
-      config.mangle.properties.regex = this.regexp(config.mangle.properties.regex);
-    }
+    config = transformMangleRegex(config);
 
-    return cloneDeep(config);
+    return config;
   }
 
   /**
@@ -104,17 +119,19 @@ class Config {
    */
   get uglifyjs() {
     const { mangleProperties } = this.values;
-    const config = rip(this.values, 'mangleProperties');
+    let config = cloneDeep(
+      rip(this.values, 'mangleProperties')
+    );
 
-    if (mangleProperties && mangleProperties.regex) {
-      mangleProperties.regex = this.regexp(mangleProperties.regex);
-    }
+    config = transformMangleRegex(config);
 
     //
     // Support legacy uglify-js option and transform it to support uglify-js@3
     //
     if (typeof mangleProperties === 'object') {
       if (typeof config.mangle !== 'object') config.mangle = {};
+      if (mangleProperties.regex) mangleProperties.regex = regexp(mangleProperties.regex);
+
       config.mangle.properties = {
         ...config.mangle.properties,
         ...mangleProperties
@@ -127,7 +144,7 @@ class Config {
     config.parse.bare_returns = true;
     config.compress.reduce_vars = true;
 
-    return cloneDeep(config);
+    return config;
   }
 }
 
