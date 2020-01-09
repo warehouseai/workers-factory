@@ -13,13 +13,26 @@ const rip = require('rip-out');
  * @public
  */
 class Config {
-  constructor({ minify, sourceMapContent, filename }) {
+  constructor({ minify, sourceMapContent, filename } = {}) {
     this.filename = filename;
 
     //
-    // Prevent polution of wrhs.toml
+    // Prevent polution of wrhs.toml by normalizing and cloning configuration.
     //
     this.values = this.normalize(minify, sourceMapContent);
+  }
+
+  /**
+   * Convert value to Regular Expression. Return value if it is unsafe.
+   *
+   * @param {String} value RegExp-like string.
+   * @returns {RegExp|String} Converted value
+   * @private
+   */
+  regexp(value) {
+    if (!safe(value)) return value;
+
+    return new RegExp(value);
   }
 
   /**
@@ -28,7 +41,7 @@ class Config {
    * @param {Object} minify base configuration from wrhs.toml.
    * @param {String} sourceMapContent JSON representation of sourceMap.
    * @returns {Object} configuration
-   * @public
+   * @private
    */
   normalize(minify = {}, sourceMapContent) {
     const config = cloneDeep(minify);
@@ -36,13 +49,6 @@ class Config {
     config.parse = config.parse || {};
     config.compress = config.compress || {};
     config.sourceMap = config.sourceMap || {};
-
-    if (config.mangle
-        && config.mangle.properties
-        && config.mangle.properties.regex
-        && safe(config.mangle.properties.regex)) {
-      config.mangle.properties.regex = new RegExp(config.mangle.properties.regex);
-    }
 
     //
     // Define sourcemap config with:
@@ -83,6 +89,10 @@ class Config {
   get terser() {
     const config = rip(this.values, 'minifier');
 
+    if (config.mangle && config.mangle.properties && config.mangle.properties.regex) {
+      config.mangle.properties.regex = this.regexp(config.mangle.properties.regex);
+    }
+
     return cloneDeep(config);
   }
 
@@ -93,8 +103,12 @@ class Config {
    * @public
    */
   get uglifyjs() {
+    const { mangleProperties } = this.values;
     const config = rip(this.values, 'mangleProperties');
-    const mangleProperties = config.mangleProperties;
+
+    if (mangleProperties.regex) {
+      mangleProperties.regex = this.regexp(mangleProperties.regex);
+    }
 
     //
     // Support legacy uglify-js option and transform it to support uglify-js@3
