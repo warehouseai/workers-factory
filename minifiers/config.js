@@ -22,6 +22,7 @@ function regexp(value) {
  *
  * @param {Object} config Configuration.
  * @returns {Object} transformed configuration
+ * @private
  */
 function transformMangleRegex(config = {}) {
   if (config.mangle && config.mangle.properties && config.mangle.properties.regex) {
