@@ -106,7 +106,7 @@ class Config {
     const { mangleProperties } = this.values;
     const config = rip(this.values, 'mangleProperties');
 
-    if (mangleProperties.regex) {
+    if (mangleProperties && mangleProperties.regex) {
       mangleProperties.regex = this.regexp(mangleProperties.regex);
     }
 
