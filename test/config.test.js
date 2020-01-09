@@ -18,10 +18,16 @@ describe('Minifier config', function () {
   });
 
   it('normalization adds basic configuration properties', function () {
-    const config = new Config({ filename: 'test.js' });
+    const config = new Config({
+      filename: 'test.js',
+      minify: {
+        minifier: 'terser'
+      }
+    });
 
     assume(config.values).to.have.property('parse');
     assume(config.values).to.have.property('compress');
+    assume(config.values).to.not.have.property('minifier');
     assume(config.values).to.have.deep.property('sourceMap', {
       includeSources: true,
       filename: 'test.js',

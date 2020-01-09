@@ -60,7 +60,7 @@ class Config {
    * @private
    */
   normalize(minify = {}, sourceMapContent) {
-    const config = cloneDeep(minify);
+    const config = rip(cloneDeep(minify), 'minifier');
 
     config.parse = config.parse || {};
     config.compress = config.compress || {};
@@ -103,13 +103,9 @@ class Config {
    * @public
    */
   get terser() {
-    let config = cloneDeep(
-      rip(this.values, 'minifier')
+    return transformMangleRegex(
+      cloneDeep(this.values)
     );
-
-    config = transformMangleRegex(config);
-
-    return config;
   }
 
   /**
