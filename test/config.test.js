@@ -12,7 +12,7 @@ describe('Minifier config', function () {
     assume(Config.prototype.constructor).is.a('function');
   });
 
-  it('stores minification config and ', function () {
+  it('stores minification config and output properties', function () {
     assume(new Config()).to.have.property('values');
     assume(new Config({ filename: 'test.min.js' })).to.have.property('filename', 'test.min.js');
   });
