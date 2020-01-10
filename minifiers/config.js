@@ -42,8 +42,8 @@ function transformMangleRegex(config = {}) {
  * @public
  */
 class Config {
-  constructor({ minify, sourceMapContent, filename } = {}) {
-    this.filename = filename;
+  constructor({ minify, sourceMapContent, filename = '' } = {}) {
+    this._filename = filename;
 
     //
     // Prevent polution of wrhs.toml by normalizing and cloning configuration.
@@ -83,23 +83,23 @@ class Config {
       config.sourceMap.content = sourceMapContent.toString('utf-8');
     }
 
-    return config;
+    return Object.freeze(config);
   }
 
   /**
    * Return minified filename of the source.
    *
-   * @returns {String} filename
+   * @returns {String} filename of minified content
    * @public
    */
-  get minFilename() {
-    return this.filename.replace('.js', '.min.js');
+  get filename() {
+    return this._filename.replace('.js', '.min.js');
   }
 
   /**
    * Return filename of the sourceMap.
    *
-   * @returns {String} filename
+   * @returns {String} sourceMap filename.
    * @public
    */
   get map() {
@@ -125,12 +125,11 @@ class Config {
    * @public
    */
   get uglifyjs() {
-    const { mangleProperties } = this.values;
-    let config = cloneDeep(
-      rip(this.values, 'mangleProperties')
-    );
+    let config = cloneDeep(this.values);
+    const { mangleProperties } = config;
 
     config = transformMangleRegex(config);
+    config = rip(config, 'mangleProperties');
 
     //
     // Support legacy uglify-js option and transform it to support uglify-js@3

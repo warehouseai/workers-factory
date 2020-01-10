@@ -14,7 +14,7 @@ describe('Minifier config', function () {
 
   it('stores minification config and output properties', function () {
     assume(new Config()).to.have.property('values');
-    assume(new Config({ filename: 'test.min.js' })).to.have.property('filename', 'test.min.js');
+    assume(new Config({ filename: 'test.js' })).to.have.property('_filename', 'test.js');
   });
 
   it('normalization adds basic configuration properties', function () {
@@ -30,14 +30,14 @@ describe('Minifier config', function () {
     assume(config.values).to.not.have.property('minifier');
     assume(config.values).to.have.deep.property('sourceMap', {
       includeSources: true,
-      filename: 'test.js',
-      url: 'test.js.map'
+      filename: 'test.min.js',
+      url: 'test.min.js.map'
     });
   });
 
   describe('getters', function () {
     it('are defined on Config', function () {
-      ['map', 'terser', 'uglifyjs'].forEach(getter => {
+      ['map', 'terser', 'uglifyjs', 'filename'].forEach(getter => {
         const props = Object.getOwnPropertyDescriptor(Config.prototype, getter);
 
         assume(props.enumerable).to.be.false();
@@ -45,15 +45,15 @@ describe('Minifier config', function () {
       });
     });
 
-    it('#map: returns filename of sourceMap', function () {
+    it('#map: returns filenames of sourceMaps', function () {
       const config = new Config({
         filename: 'test.js'
       });
 
-      assume(config.map).to.equal('test.js.map');
+      assume(config.map).to.equal('test.min.js.map');
 
-      config.filename = 'other.js';
-      assume(config.map).to.equal('other.js.map');
+      config._filename = 'other.js';
+      assume(config.map).to.equal('other.min.js.map');
     });
 
     it('#terser: returns Terser configuration', function () {

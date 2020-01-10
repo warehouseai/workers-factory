@@ -36,7 +36,7 @@ module.exports = function terser(options, done) {
   done(null, {
     content: results.code,
     fingerprint: fingerprint.id,
-    filename: config.minFilename
+    filename: config.filename
   }, {
     [config.map]: {
       content: results.map,

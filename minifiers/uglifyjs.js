@@ -9,7 +9,7 @@ const uglifyjs = require('uglify-js');
  *
  * @param {Object} options Content (compiled JS) and filepath.
  * @param {Function} done Completion callback.
- * @returns {Undefined} Return early.
+ * @returns {Undefined} Return early on minification error.
  * @public
  */
 module.exports = function uglify(options, done) {
@@ -36,7 +36,7 @@ module.exports = function uglify(options, done) {
   done(null, {
     content: results.code,
     fingerprint: fingerprint.id,
-    filename: config.minFilename
+    filename: config.filename
   }, {
     [config.map]: {
       content: results.map,
