@@ -5,6 +5,7 @@ const debug = require('diagnostics')('carpenterd:factory');
 const cleancss = require('./minifiers/cleancss');
 const minimize = require('./minifiers/minimize');
 const uglifyjs = require('./minifiers/uglifyjs');
+const terser = require('./minifiers/terser');
 const fingerprinter = require('fingerprinting');
 const extract = require('@wrhs/extract-config');
 const rmrf = require('./rmrf');
@@ -31,6 +32,28 @@ const extensions = {
   '.jsx': '.js',
   '.js': '.js'
 };
+
+//
+// Map of allowed JS minifiers
+//
+const JSMinifiers = new Map([
+  ['default', uglifyjs],
+  ['uglifyjs', uglifyjs],
+  ['terser', terser]
+]);
+
+/**
+ * Get the JS minifier/parser based on the configuration.
+ *
+ * @param {Object} minify Minification options from wrhs.toml
+ * @returns {Function} JS minifier.
+ * @private
+ */
+function getJSMinifier({ minify = {} }) {
+  return JSMinifiers.has(minify.minifier)
+    ? JSMinifiers.get(minify.minifier)
+    : JSMinifiers.get('default');
+}
 
 util.inherits(Factory, EE);
 
@@ -214,8 +237,8 @@ Factory.prototype.minify = function minify(next) {
     //
     debug(`Minify ${ file }`);
     switch (ext) {
-      case '.js': uglifyjs(options, minified); break;
-      case '.jsx': uglifyjs(options, minified); break;
+      case '.js': getJSMinifier(factory.config)(options, minified); break;
+      case '.jsx': getJSMinifier(factory.config)(options, minified); break;
       case '.css': cleancss(options, minified); break;
       case '.less': cleancss(options, minified); break;
       case '.styl': cleancss(options, minified); break;

@@ -1,5 +1,7 @@
 # Changelog
 
+- [#26] Add `terser` as minification option.
+
 ### 3.0.2
 
 - Update npm version
@@ -24,3 +26,4 @@
 [#19]: https://github.com/warehouseai/workers-factory/pull/19
 [#21]: https://github.com/warehouseai/workers-factory/pull/21
 [#22]:  https://github.com/warehouseai/workers-factory/pull/22
+[#26]:  https://github.com/warehouseai/workers-factory/pull/26

@@ -366,6 +366,38 @@ describe('Factory', function () {
       });
     });
 
+    it('can minify JS with Terser', function (done) {
+      factory.data.env = 'prod';
+      factory.output = {
+        'index.js.map': JSON.stringify(map),
+        'index.js': 'const change = false; class Boolier { get flip() { return !change; }}; const flipped = new Boolier().flip;'
+      };
+
+      // Explicit request Terser for ES6 code.
+      factory.config = toml.parse(
+        fs.readFileSync(path.join(__dirname, 'fixtures', 'wrhs-es6.toml'))
+      );
+
+      factory.minify(function (error) {
+        if (error) return done(error);
+
+        const sourceMap = JSON.parse(factory.output['index.min.js.map'].content);
+        assume(factory.output).to.be.an('object');
+        assume(factory.output['index.min.js'].content).to.be.instanceof(Buffer);
+        assume(factory.output['index.min.js'].content.toString()).to.include('(new class{get flip(){return!0}}).flip;');
+        assume(factory.output['index.min.js'].content.toString()).to.include('\n//# sourceMappingURL=index.min.js.map');
+        assume(factory.output['index.min.js'].fingerprint).to.equal('5ce45600fc05b0ea8994bd5c4bc6438d');
+        assume(factory.output['index.min.js.map'].content).to.be.instanceof(Buffer);
+
+        assume(sourceMap).to.be.an('object');
+        assume(sourceMap).to.have.property('version', 3);
+        assume(sourceMap).to.have.property('file', 'index.min.js');
+        assume(sourceMap).to.have.property('sourcesContent');
+        assume(sourceMap).to.have.property('mappings', 'CACc,IADJA,MACVA,WAAc,OAAA,KAAAC');
+        done();
+      });
+    });
+
     it('can minify with additional `wrhs.toml` options', function (done) {
       factory.data.env = 'prod';
 

@@ -2,24 +2,24 @@
 
 const fingerprinter = require('fingerprinting');
 const Config = require('./config.js');
-const uglifyjs = require('uglify-js');
+const Terser = require('terser');
 
 /**
- * Minify JS with UglifyJS.
+ * Minify JS using Terser.
  *
  * @param {Object} options Content (compiled JS) and filepath.
  * @param {Function} done Completion callback.
  * @returns {Undefined} Return early on minification error.
  * @public
  */
-module.exports = function uglify(options, done) {
+module.exports = function terser(options, done) {
   const config = new Config({
     minify: options.minify,
     sourceMapContent: options.map,
     filename: options.file
   });
 
-  const results = uglifyjs.minify(options.content.toString('utf-8'), config.uglifyjs);
+  const results = Terser.minify(options.content.toString('utf-8'), config.terser);
 
   //
   // Return on a minification error.
@@ -44,4 +44,3 @@ module.exports = function uglify(options, done) {
     }
   });
 };
-

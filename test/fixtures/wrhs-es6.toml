@@ -1,0 +1,15 @@
+[minify]
+minifier = 'terser'
+toplevel = true
+ecma = 2018
+
+[minify.compress]
+unsafe = true
+dead_code = true
+collapse_vars = true
+drop_console = true
+conditionals = true
+booleans = true
+unused = true
+if_return = true
+join_vars = true
