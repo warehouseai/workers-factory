@@ -87,6 +87,16 @@ class Config {
   }
 
   /**
+   * Return minified filename of the source.
+   *
+   * @returns {String} filename
+   * @public
+   */
+  get minFilename() {
+    return this.filename.replace('.js', '.min.js');
+  }
+
+  /**
    * Return filename of the sourceMap.
    *
    * @returns {String} filename

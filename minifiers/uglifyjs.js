@@ -13,11 +13,10 @@ const uglifyjs = require('uglify-js');
  * @public
  */
 module.exports = function uglify(options, done) {
-  const filename = options.file.replace('.js', '.min.js');
   const config = new Config({
     minify: options.minify,
     sourceMapContent: options.map,
-    filename
+    filename: options.file
   });
 
   const results = uglifyjs.minify(options.content.toString('utf-8'), config.uglifyjs);
@@ -37,7 +36,7 @@ module.exports = function uglify(options, done) {
   done(null, {
     content: results.code,
     fingerprint: fingerprint.id,
-    filename: filename
+    filename: config.minFilename
   }, {
     [config.map]: {
       content: results.map,

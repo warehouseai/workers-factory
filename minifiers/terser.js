@@ -13,11 +13,10 @@ const Terser = require('terser');
  * @public
  */
 module.exports = function terser(options, done) {
-  const filename = options.file.replace('.js', '.min.js');
   const config = new Config({
     minify: options.minify,
     sourceMapContent: options.map,
-    filename
+    filename: options.file
   });
 
   const results = Terser.minify(options.content.toString('utf-8'), config.terser);
@@ -37,7 +36,7 @@ module.exports = function terser(options, done) {
   done(null, {
     content: results.code,
     fingerprint: fingerprint.id,
-    filename: filename
+    filename: config.minFilename
   }, {
     [config.map]: {
       content: results.map,
