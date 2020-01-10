@@ -1,5 +1,7 @@
 # Changelog
 
+### 3.1.0
+
 - [#26] Add `terser` as minification option.
 
 ### 3.0.2
